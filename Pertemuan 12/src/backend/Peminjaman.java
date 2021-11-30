@@ -1,30 +1,28 @@
 package backend;
-
-import java.sql.ResultSet;
 import java.util.ArrayList;
-
+import java.sql.*;
 public class Peminjaman {
+    private int idpeminjaman;
+    private Anggota anggota=new Anggota();
+    private Buku buku=new Buku();
+    private String tanggalpinjam,tanggalkembali;
 
-    private int idPeminjaman;
-    private Anggota anggota = new Anggota();
-    private Buku buku = new Buku();
-    private String tanggalPinjam;
-    private String tanggalKembali;
-
-    public int getIdPeminjaman() {
-        return idPeminjaman;
+    public Peminjaman() {
     }
 
-    public void setIdPeminjaman(int idPeminjaman) {
-        this.idPeminjaman = idPeminjaman;
+    public Peminjaman(Anggota anggota,Buku buku,String tanggalpinjam, String tanggalkembali) {
+        this.anggota=anggota;
+        this.buku=buku;
+        this.tanggalpinjam = tanggalpinjam;
+        this.tanggalkembali = tanggalkembali;
     }
 
-    public Anggota getAnggota() {
-        return anggota;
+    public int getIdpeminjaman() {
+        return idpeminjaman;
     }
 
-    public void setAnggota(Anggota anggota) {
-        this.anggota = anggota;
+    public void setIdpeminjaman(int idpeminjaman) {
+        this.idpeminjaman = idpeminjaman;
     }
 
     public Buku getBuku() {
@@ -35,139 +33,237 @@ public class Peminjaman {
         this.buku = buku;
     }
 
-    public String getTanggalPinjam() {
-        return tanggalPinjam;
+    public Anggota getAnggota() {
+        return anggota;
     }
 
-    public void setTanggalPinjam(String tanggalPinjam) {
-        this.tanggalPinjam = tanggalPinjam;
-    }
-
-    public String getTanggalKembali() {
-        return tanggalKembali;
-    }
-
-    public void setTanggalKembali(String tanggalKembali) {
-        this.tanggalKembali = tanggalKembali;
-    }
-
-    public Peminjaman() {
-
-    }
-
-    public Peminjaman(Anggota anggota, Buku buku, String tanggalPinjam, String tanggalKembali) {
+    public void setAnggota(Anggota anggota) {
         this.anggota = anggota;
-        this.buku = buku;
-        this.tanggalPinjam = tanggalPinjam;
-        this.tanggalKembali = tanggalKembali;
     }
 
-    public Peminjaman getById(int id) {
-        Peminjaman pj = new Peminjaman();
-        ResultSet rs = DBHelper.selectQuery("SELECT "
-                + "p.idpeminjaman AS idpeminjaman,"
-                + "p.tanggalpinjam AS tanggalpinjam,"
-                + "p.tanggalkembali AS tanggalkembali,"
-                + "a.idanggota AS idanggota,"
-                + "a.nama AS nama,"
-                + "a.alamat AS alamat,"
-                + "a.telepon AS telepon,"
-                + "b.idbuku AS idbuku,"
-                + "b.judul AS judul,"
-                + "b.penerbit AS penerbit,"
-                + "b.penulis AS penulis"
-                + " FROM peminjaman p "
-                + "JOIN buku b ON p.idbuku = b.idbuku "
-                + "JOIN anggota a ON p.idanggota = a.idanggota "
-                + "WHERE p.idpeminjaman = '" + id + "'");
-        try {
-            while (rs.next()) {
-                pj = new Peminjaman();
-                pj.setIdPeminjaman(rs.getInt("idpeminjaman"));
-                pj.getAnggota().setIdAnggota(rs.getInt("idanggota"));
-                pj.getAnggota().setNama(rs.getString("nama"));
-                pj.getAnggota().setAlamat(rs.getString("alamat"));
-                pj.getAnggota().setTelepon(rs.getString("telepon"));
-                pj.getBuku().setIdBuku(rs.getInt("idbuku"));
-                pj.getBuku().setJudul(rs.getString("judul"));
-                pj.getBuku().setPenerbit(rs.getString("penerbit"));
-                pj.getBuku().setPenulis(rs.getString("penulis"));
-                pj.setTanggalPinjam(rs.getString("tanggalpinjam"));
-                pj.setTanggalKembali(rs.getString("tanggalkembali"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return pj;
+    public String getTanggalpinjam() {
+        return tanggalpinjam;
     }
 
-    public ArrayList<Peminjaman> getAll() {
-        ArrayList<Peminjaman> ListPeminjaman = new ArrayList();
+    public void setTanggalpinjam(String tanggalpinjam) {
+        this.tanggalpinjam = tanggalpinjam;
+    }
 
-        ResultSet rs = DBHelper.selectQuery("SELECT "
-                + "p.idpeminjaman AS idpeminjaman,"
-                + "p.tanggalpinjam AS tanggalpinjam,"
-                + "p.tanggalkembali AS tanggalkembali,"
-                + "a.idanggota AS idanggota,"
-                + "a.nama AS nama,"
-                + "a.alamat AS alamat,"
-                + "a.telepon AS telepon,"
-                + "b.idbuku AS idbuku,"
-                + "b.judul AS judul,"
-                + "b.penerbit AS penerbit,"
-                + "b.penulis AS penulis"
-                + " FROM peminjaman p "
-                + "JOIN buku b ON p.idbuku = b.idbuku "
-                + "JOIN anggota a ON p.idanggota = a.idanggota");
+    public String getTanggalkembali() {
+        return tanggalkembali;
+    }
 
-        try {
-            while (rs.next()) {
-                Peminjaman pj = new Peminjaman();
-                pj.setIdPeminjaman(rs.getInt("idpeminjaman"));
-                pj.getAnggota().setIdAnggota(rs.getInt("idanggota"));
-                pj.getAnggota().setNama(rs.getString("nama"));
-                pj.getAnggota().setAlamat(rs.getString("alamat"));
-                pj.getAnggota().setTelepon(rs.getString("telepon"));
-                pj.getBuku().setIdBuku(rs.getInt("idbuku"));
-                pj.getBuku().setJudul(rs.getString("judul"));
-                pj.getBuku().setPenerbit(rs.getString("penerbit"));
-                pj.getBuku().setPenulis(rs.getString("penulis"));
-                pj.setTanggalPinjam(rs.getString("tanggalpinjam"));
-                pj.setTanggalKembali(rs.getString("tanggalkembali"));
-
-                ListPeminjaman.add(pj);
+    public void setTanggalkembali(String tanggalkembali) {
+        this.tanggalkembali = tanggalkembali;
+    }
+    
+    public Peminjaman getById(int id){
+        Peminjaman pmj=new Peminjaman();
+        ResultSet rs=DBHelper.selectQuery("SELECT "
+                +"  p.idpeminjaman as idpeminjaman, "
+                +"  a.idanggota as idanggota, "
+                +"  a.nama as nama, "
+                +"  a.alamat as alamat, "
+                +"  a.telepon as telepon, "
+                +"  b.idbuku as idbuku, "
+                +"  b.idkategori as idkategori, "
+                +"  b.judul as judul, "
+                +"  b.penerbit as penerbit, "
+                +"  b.penulis as penulis, "
+                +"  p.tanggalpinjam as tanggalpinjam, "
+                +"  p.tanggalkembali as tanggalkembali "
+                +"  FROM peminjaman p "
+                +"  LEFT JOIN anggota a on p.idanggota=a.idanggota"
+                +"  LEFT JOIN buku b on p.idbuku=b.idbuku "
+                +"  WHERE p.idpeminjaman = '"+id+"'");
+        try{
+            while(rs.next()){
+                pmj=new Peminjaman();
+                pmj.setIdpeminjaman(rs.getInt("idpeminjaman"));
+                pmj.setTanggalpinjam(rs.getString("tanggalpinjam"));
+                pmj.setTanggalkembali(rs.getString("tanggalkembali"));
+                pmj.getAnggota().setIdAnggota(rs.getInt("idanggota"));
+                pmj.getAnggota().setNama(rs.getString("nama"));
+                pmj.getAnggota().setAlamat(rs.getString("alamat"));
+                pmj.getAnggota().setTelepon(rs.getString("telepon"));
+                pmj.getBuku().setIdBuku(rs.getInt("idbuku"));
+                pmj.getBuku().setJudul(rs.getString("judul"));
+                pmj.getBuku().setPenerbit(rs.getString("penerbit"));
+                pmj.getBuku().setPenulis(rs.getString("penulis"));
             }
-        } catch (Exception e) {
+        }catch(Exception e){
             e.printStackTrace();
         }
-
+        return pmj;
+    }
+    
+    public ArrayList<Peminjaman> getAll(){
+        ArrayList<Peminjaman>ListPeminjaman=new ArrayList();
+        ResultSet rs=DBHelper.selectQuery("SELECT "
+                +"  p.idpeminjaman as idpeminjaman, "
+                +"  a.idanggota as idanggota, "
+                +"  a.nama as nama, "
+                +"  a.alamat as alamat, "
+                +"  a.telepon as telepon, "
+                +"  b.idbuku as idbuku, "
+                +"  b.idkategori as idkategori, "
+                +"  b.judul as judul, "
+                +"  b.penerbit as penerbit, "
+                +"  b.penulis as penulis, "
+                +"  p.tanggalpinjam as tanggalpinjam, "
+                +"  p.tanggalkembali as tanggalkembali "
+                +"  FROM peminjaman p "
+                +"  LEFT JOIN anggota a on p.idanggota=a.idanggota"
+                +"  LEFT JOIN buku b on p.idbuku=b.idbuku ");
+        try{
+            while(rs.next()){
+                Peminjaman pmj=new Peminjaman();
+                pmj.setIdpeminjaman(rs.getInt("idpeminjaman"));
+                pmj.setTanggalpinjam(rs.getString("tanggalpinjam"));
+                pmj.setTanggalkembali(rs.getString("tanggalkembali"));
+                pmj.getAnggota().setIdAnggota(rs.getInt("idanggota"));
+                pmj.getAnggota().setNama(rs.getString("nama"));
+                pmj.getAnggota().setAlamat(rs.getString("alamat"));
+                pmj.getAnggota().setTelepon(rs.getString("telepon"));
+                pmj.getBuku().setIdBuku(rs.getInt("idbuku"));
+                pmj.getBuku().setJudul(rs.getString("judul"));
+                pmj.getBuku().setPenerbit(rs.getString("penerbit"));
+                pmj.getBuku().setPenulis(rs.getString("penulis"));
+                ListPeminjaman.add(pmj);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         return ListPeminjaman;
     }
-
-    public void save() {
-        if (getById(idPeminjaman).getIdPeminjaman() == 0) {
-            String SQL = "INSERT INTO peminjaman (idanggota,idbuku,tanggalpinjam,tanggalkembali) VALUES("
-                    + "'" + this.getAnggota().getIdAnggota() + "',"
-                    + "'" + this.getBuku().getIdBuku() + "',"
-                    + "'" + this.getTanggalPinjam() + "',"
-                    + "'" + this.getTanggalKembali() + "'"
-                    + ")";
-            this.idPeminjaman = DBHelper.insertQueryGetId(SQL);
-        } else {
-            String SQL = "UPDATE peminjaman SET "
-                    + "idanggota = '" + this.getAnggota().getIdAnggota() + "',"
-                    + "idbuku = '" + this.getBuku().getIdBuku() + "',"
-                    + "tanggalpinjam = '" + this.getTanggalPinjam() + "',"
-                    + "tanggalkembali = '" + this.getTanggalKembali() + "'"
-                    + "WHERE idpeminjaman = '" + this.getIdPeminjaman() + "'";
+    
+    /*public ArrayList<Peminjaman> search3(String keyword){
+        ArrayList<Peminjaman>ListPeminjaman=new ArrayList();
+        ResultSet rs=DBHelper.selectQuery("SELECT "
+                +"  b.idbuku as idbuku "
+                +"  FROM peminjaman p "
+                +"  LEFT JOIN anggota a on p.idanggota=a.idanggota"
+                +"  LEFT JOIN buku b on p.idbuku=b.idbuku "
+                +"  WHERE a.idbuku LIKE '%"+keyword+"%' ");
+        try{
+            while(rs.next()){
+                Peminjaman pmj=new Peminjaman();
+                pmj.setIdpeminjaman(rs.getInt("idpeminjaman"));
+                pmj.setTanggalpinjam(rs.getString("tanggalpinjam"));
+                pmj.setTanggalkembali(rs.getString("tanggalkembali"));
+                pmj.getAnggota().setIdanggota(rs.getInt("idanggota"));
+                pmj.getAnggota().setNama(rs.getString("nama"));
+                pmj.getAnggota().setAlamat(rs.getString("alamat"));
+                pmj.getAnggota().setTelepon(rs.getString("telepon"));
+                pmj.getBuku().setIdbuku(rs.getInt("idbuku"));
+                pmj.getBuku().setJudul(rs.getString("judul"));
+                pmj.getBuku().setPenerbit(rs.getString("penerbit"));
+                pmj.getBuku().setPenulis(rs.getString("penulis"));
+                ListPeminjaman.add(pmj);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return ListPeminjaman;
+    }
+    
+    public ArrayList<Peminjaman> search2(String keyword){
+        ArrayList<Peminjaman>ListPeminjaman=new ArrayList();
+        ResultSet rs=DBHelper.selectQuery("SELECT "
+                +"  a.idanggota as idanggota "
+                +"  FROM peminjaman p "
+                +"  LEFT JOIN anggota a on p.idanggota=a.idanggota"
+                +"  LEFT JOIN buku b on p.idbuku=b.idbuku "
+                +"  WHERE a.idanggota LIKE '"+keyword+"' ");
+        try{
+            while(rs.next()){
+                Peminjaman pmj=new Peminjaman();
+                pmj.setIdpeminjaman(rs.getInt("idpeminjaman"));
+                pmj.setTanggalpinjam(rs.getString("tanggalpinjam"));
+                pmj.setTanggalkembali(rs.getString("tanggalkembali"));
+                pmj.getAnggota().setIdanggota(rs.getInt("idanggota"));
+                pmj.getAnggota().setNama(rs.getString("nama"));
+                pmj.getAnggota().setAlamat(rs.getString("alamat"));
+                pmj.getAnggota().setTelepon(rs.getString("telepon"));
+                pmj.getBuku().setIdbuku(rs.getInt("idbuku"));
+                pmj.getBuku().setJudul(rs.getString("judul"));
+                pmj.getBuku().setPenerbit(rs.getString("penerbit"));
+                pmj.getBuku().setPenulis(rs.getString("penulis"));
+                ListPeminjaman.add(pmj);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return ListPeminjaman;
+    }*/
+    
+    public ArrayList<Peminjaman> search(String keyword){
+        ArrayList<Peminjaman>ListPeminjaman=new ArrayList();
+        ResultSet rs=DBHelper.selectQuery("SELECT "
+                +"  p.idpeminjaman as idpeminjaman, "
+                +"  a.idanggota as idanggota, "
+                +"  a.nama as nama, "
+                +"  a.alamat as alamat, "
+                +"  a.telepon as telepon, "
+                +"  b.idbuku as idbuku, "
+                +"  b.idkategori as idkategori, "
+                +"  b.judul as judul, "
+                +"  b.penerbit as penerbit, "
+                +"  b.penulis as penulis, "
+                +"  p.tanggalpinjam as tanggalpinjam, "
+                +"  p.tanggalkembali as tanggalkembali "
+                +"  FROM peminjaman p "
+                +"  LEFT JOIN anggota a on p.idanggota=a.idanggota"
+                +"  LEFT JOIN buku b on p.idbuku=b.idbuku "
+                +"  WHERE a.nama LIKE '%"+keyword+"%' "
+                +"   or b.judul LIKE '%"+keyword+"%' "
+                +"   or p.tanggalpinjam LIKE '%"+keyword+"%' "
+                +"   or p.tanggalkembali LIKE '%"+keyword+"%' ");
+        try{
+            while(rs.next()){
+                Peminjaman pmj=new Peminjaman();
+                pmj.setIdpeminjaman(rs.getInt("idpeminjaman"));
+                pmj.setTanggalpinjam(rs.getString("tanggalpinjam"));
+                pmj.setTanggalkembali(rs.getString("tanggalkembali"));
+                pmj.getAnggota().setIdAnggota(rs.getInt("idanggota"));
+                pmj.getAnggota().setNama(rs.getString("nama"));
+                pmj.getAnggota().setAlamat(rs.getString("alamat"));
+                pmj.getAnggota().setTelepon(rs.getString("telepon"));
+                pmj.getBuku().setIdBuku(rs.getInt("idbuku"));
+                pmj.getBuku().setJudul(rs.getString("judul"));
+                pmj.getBuku().setPenerbit(rs.getString("penerbit"));
+                pmj.getBuku().setPenulis(rs.getString("penulis"));
+                ListPeminjaman.add(pmj);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return ListPeminjaman;
+    }
+    
+    public void save(){
+        if(getById(idpeminjaman).getIdpeminjaman()==0){
+            String SQL="INSERT INTO peminjaman(idanggota, idbuku, tanggalpinjam, tanggalkembali) VALUES("
+                    +"  '"+this.getAnggota().getIdAnggota()+"', "
+                    +"  '"+this.getBuku().getIdBuku()+"', "
+                    +"  '"+this.tanggalpinjam+"', "
+                    +"  '"+this.tanggalkembali+"' "
+                    +"  )";
+            this.idpeminjaman=DBHelper.insertQueryGetId(SQL);
+        }else{
+            String SQL="UPDATE peminjaman SET "
+                    +"  idanggota = '"+this.getAnggota().getIdAnggota()+"', "
+                    +"  idbuku = '"+this.getBuku().getIdBuku()+"', "
+                    +"  tanggalpinjam = '"+this.tanggalpinjam+"', "
+                    +"  tanggalkembali = '"+this.tanggalkembali+"' "
+                    +"  WHERE idpeminjaman = '"+this.idpeminjaman+"'";
             DBHelper.executeQuery(SQL);
         }
     }
-
-    public void delete() {
-        String SQL = "DELETE FROM peminjaman WHERE idpeminjaman = '" + this.getIdPeminjaman() + "'";
+    
+    public void delete(){
+        String SQL="DELETE FROM peminjaman WHERE idpeminjaman = '"+this.idpeminjaman+"'";
         DBHelper.executeQuery(SQL);
     }
-
-
 }
+
